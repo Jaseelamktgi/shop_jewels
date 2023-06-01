@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block metadescription %}
+    {% if category %}
+        {{ category.description | truncatewords:155 }}
+    {% else %}
+        Welcome to LICERIA & CO, where you can buy different models as per your choice...
+    {% endif %}
+{% endblock %}
+
+{% block title %}
+    {% if category %}
+        {{ category.name }} - LICERIA & CO
+    {% else %}
+        See Our New Collections - LICERIA & CO
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    {% if category %}
+        <div>
+            <div class="row my_row">
+                <div class="mx_auto">
+                    <p><a href="{% url 'jewls:allProductCategory' %}">Our Product Collections</a></p>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+    <div class="mx_auto">
+        {% if category %}
+            <img  class="my_img" src="{{ category.image.url }}" alt="{{ category.name }}" width="70%" height="800px">
+    </div>
+    <br>
+    <div>
+        <h1 class="text-center my_title">{{ category.name }}</h1>
+        <p class="text-justify-center">{{ category.description }}</p>
+    </div>
+        {% else %}
+            <div>
+                <img class="my_img"  src="{% static 'img/banner.png' %}" alt="Our Products" width="1300px" height="600px" >
+            </div>
+            <br>
+            <div class="mb-5">
+                <h1 class="text-center p-5 my_title">Our Product Collections</h1>
+                <p class="text-justify-center">Bringing jewelry designs to life is a skill in and of itself,
+                    and one that can vary greatly depending on the type of bauble you want to produce.
+                    Some types of jewelry can be created by hand. Beaded or clay pieces, for example,
+                    are more beginner-friendly options that don’t require too many tools or specialized skills.
+                    With just a little experimentation—or a few classes—you can learn techniques to produce these
+                    types of accessories. </p>
+            </div>
+        {% endif %}
+    <div class="container ">
+        <div class="row mx_auto">
+            {% for product in products.object_list %}
+                <div class="mb-5 col-9 col-sm-12 col-md-4 col-lg-4">
+                    <div class="card text-center" style="min-width:18rem; height:750px;">
+                        <a href="{{ product.get_url }}"> <img class="card-img-top my_img" src="{{ product.image.url }}" alt="{{ product.name }}" height="500px" width="400px" ></a>
+                        <div class="card-body">
+                            <h4 class="card-title">{{ product.name }}</h4>
+                            <h5 class="card-text">{{ product.description }}</h5>
+                            <p class="card-text">{{ product.price }}</p>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        <div class="mx_auto">
+            {% if products.paginator.num_pages > 1 %}
+
+            <hr>
+            <div class="text-center">
+                {% for pg in products.paginator.page_range %}
+                    <a href="?page={{pg}}" class="btn btn-light btn-sm {% if products.number == pg %} active {% endif %} " >{{pg}}</a>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+        <br>
+    </div>
+{% endblock %}
